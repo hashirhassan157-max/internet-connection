@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internet Status</title>
+  <style>
+    body {
+      background-color: rgb(89, 84, 84);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* full height center */
+      margin: 0;
+    }
+
+    p {
+      width: 90%;
+      max-width: 500px;
+      font-size: clamp(18px, 5vw, 30px);
+      font-weight: bolder;
+      background-color: rgba(149, 247, 149, 0.762);
+      text-align: center;
+      padding: 15px 10px;
+      border-radius: 12px;
+      color: rgba(46, 44, 44, 0.9);
+      box-sizing: border-box;
+    }
+
+    /* Online/Offline colors */
+    .online {
+      background-color: rgba(149, 247, 149, 0.85);
+    }
+    .offline {
+      background-color: rgba(247, 149, 149, 0.85);
+    }
+
+    /* Toast popup */
+    .toast {
+      position: fixed;
+      bottom: -100px; /* hidden initially */
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      opacity: 0;
+      transition: all 0.5s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      bottom: 30px;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <p id="demo"></p>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let statusdiv = document.getElementById("demo");
+    let toast = document.getElementById("toast");
+
+    function showToast(message, type) {
+      toast.textContent = message;
+      toast.style.background = type === "online" ? "green" : "red";
+      toast.classList.add("show");
+
+      // Hide after 3s
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    function updatestatus() {
+      if (navigator.onLine) {
+        statusdiv.classList.remove("offline");
+        statusdiv.classList.add("online");
+        statusdiv.textContent = "✅ Your Internet is Connected";
+
+        showToast("✅ Internet Connected", "online");
+      } else {
+        statusdiv.classList.remove("online");
+        statusdiv.classList.add("offline");
+        statusdiv.textContent = "❌ Your Internet is Disconnected";
+
+        showToast("❌ Internet Disconnected", "offline");
+      }
+    }
+
+    updatestatus();
+    window.addEventListener("online", updatestatus);
+    window.addEventListener("offline", updatestatus);
+  </script>
+</body>
+</html>
